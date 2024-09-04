@@ -29,6 +29,7 @@ const search = async (req, res, next) => {
         const resp = await openai.chat.completions.create({
             model:"gpt-4o",
             messages})
+        console.log({resp})
         const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
         console.log(parsedResponse)
         const spots = JSON.parse(parsedResponse)
