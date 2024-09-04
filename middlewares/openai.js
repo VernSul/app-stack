@@ -25,13 +25,25 @@ console.log()
 const search = async (req, res, next) => {
     const query = req.body.spot_query
     messages.push({"role": "user", "content": query})
-    const resp = await openai.chat.completions.create({
-        model:"gpt-4o",
-        messages})
-    const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
-    console.log(parsedResponse)
-    const spots = JSON.parse(parsedResponse)
-    res.json(spots)
+    try {
+        const resp = await openai.chat.completions.create({
+            model:"gpt-4o",
+            messages})
+        const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
+        console.log(parsedResponse)
+        const spots = JSON.parse(parsedResponse)
+        res.json(spots)
+        
+    }
+    catch(e) {
+        console.log("error in search openai: ", e)
+        res.status(500);
+        res.send('Server error: ', e);
+    }
+
+
+
+
 
 }
 
