@@ -1,12 +1,18 @@
 // Import the necessary modules
 const express = require('express');
 const dotenv = require('dotenv');
+
+const cors = require('cors');
+
 const { search } = require('./middlewares/openai')
 
 // Configure dotenv to load environment variables from the .env file
 dotenv.config();
 // Initialize an Express application
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
