@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 const cors = require('cors');
 
-const { search } = require('./middlewares/openai')
+const { getMapsElements } = require('./middlewares/search')
 
 // Configure dotenv to load environment variables from the .env file
 dotenv.config();
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 // new spot search
-app.post('/search', search)
+app.post('/search', getMapsElements)
 
 // Start the server on a specified port
 const PORT = process.env.PORT || 3000;
