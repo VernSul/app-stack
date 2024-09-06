@@ -11,9 +11,19 @@ const URL_BASE = "https://maps.googleapis.com/maps/api/geocode/json?address="
 
 const getGeoLoc = async (spot) => {
     console.log({spot})
-    const url = URL_BASE + spot.address.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
+    let url;
+    if(spot.address) { 
+        url = URL_BASE + spot.address.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
+    } else if (spot.adress) {
+        url = URL_BASE + spot.adress.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
+    } else if (spot.addres) {
+        url = URL_BASE + spot.addres.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
+    }
     const resp = await axios.get(url)
-    spot.geoloc = resp.data.results[0]["geometry"]["location"]["lat"].toString() + "," + resp.data.results[0]["geometry"]["location"]["lng"].toString()
+    spot.geoloc =  { 
+        lat: resp.data.results[0]["geometry"]["location"]["lat"], 
+        lng: resp.data.results[0]["geometry"]["location"]["lng"]
+    }
     console.log(spot.geoloc)
 
     return spot
