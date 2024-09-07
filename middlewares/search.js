@@ -20,10 +20,13 @@ const getGeoLoc = async (spot) => {
         url = URL_BASE + spot.addres.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
     }
     const resp = await axios.get(url)
-    spot.geoloc =  { 
-        lat: resp.data.results[0]["geometry"]["location"]["lat"], 
-        lng: resp.data.results[0]["geometry"]["location"]["lng"]
-    }
+    spot.geoloc =  new google.maps.LatLng(
+        resp.data.results[0]["geometry"]["location"]["lat"], 
+        resp.data.results[0]["geometry"]["location"]["lng"])
+    // { 
+    //     lat: resp.data.results[0]["geometry"]["location"]["lat"], 
+    //     lng: resp.data.results[0]["geometry"]["location"]["lng"]
+    // }
     console.log(spot.geoloc)
 
     return spot
