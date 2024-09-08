@@ -1,4 +1,4 @@
-const { search } = require('./openai')
+const { search, validate_adress } = require('./openai')
 const dotenv = require('dotenv');
 const axios = require('axios')
 
@@ -10,7 +10,6 @@ const URL = "https://maps.googleapis.com/maps/api/geocode/json?address=314 W 52n
 const URL_BASE = "https://maps.googleapis.com/maps/api/geocode/json?address="
 
 const getGeoLoc = async (spot) => {
-    console.log({spot})
     let url;
     if(spot.address) { 
         url = URL_BASE + spot.address.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
@@ -20,17 +19,18 @@ const getGeoLoc = async (spot) => {
         url = URL_BASE + spot.addres.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
     }
     const resp = await axios.get(url)
-    spot.geoloc =  new google.maps.LatLng(
-        resp.data.results[0]["geometry"]["location"]["lat"], 
-        resp.data.results[0]["geometry"]["location"]["lng"])
-    // { 
-    //     lat: resp.data.results[0]["geometry"]["location"]["lat"], 
-    //     lng: resp.data.results[0]["geometry"]["location"]["lng"]
-    // }
-    console.log(spot.geoloc)
-
+    spot.geoloc =  { 
+        lat: resp.data.results[0]["geometry"]["location"]["lat"], 
+        lng: resp.data.results[0]["geometry"]["location"]["lng"]
+    }
     return spot
 
+
+}
+
+const validate_address = async (spot) => {
+    const isValid = await validate_adress(spot)
+    return isValid
 
 }
 
@@ -40,9 +40,17 @@ const getMapsElements = async (req, res) => {
 
     try {
         const chatGptResp = await search(query)
-        console.log({chatGptResp})
-        const full_resp = await Promise.all(chatGptResp.map(obj => getGeoLoc(obj)))
+        const doesExistMany =  await Promise.all(chatGptResp.map(x => validate_address(x)))
+
+        let validatedPlaces = []
+        doesExistMany.forEach((x, i) => {
+            if(x) validatedPlaces.push(chatGptResp[i])
+        })
+
+        const full_resp = await Promise.all(validatedPlaces.map(obj => getGeoLoc(obj)))
+
         const final_resp = {spots: full_resp, locations: full_resp.map(({geoloc}) => geoloc)}
+
         res.send(final_resp)
     }
     catch(e) {
