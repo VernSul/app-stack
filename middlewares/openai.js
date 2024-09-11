@@ -21,7 +21,7 @@ let messages = [
 ]
 
 const validate_adress = async (spot) => {
-    const val_prompt = `Is there a place called ${spot.name} at this address ${spot.address}. Return a json with boolean acessed by a key "doesExist" with true if Yes and False if no.`
+    const val_prompt = `Is there a place called ${spot.name} at this address ${spot.address}. Return exclusively a json with a boolean accessed by a key "doesExist" with true if Yes and False if no.`
     
     const resp = await openai.chat.completions.create({
         model:"gpt-4o",
@@ -29,10 +29,15 @@ const validate_adress = async (spot) => {
         messages: [{"role": "user", "content": val_prompt}]})
 
     console.log(resp.choices[0].message.content)
+    try {
     
     const json = JSON.parse(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
 
     return json.doesExist
+    } catch(e) {
+        print(`unable to parse validation response for ${spot}: `, e)
+        return false
+    }
 }
 
 
