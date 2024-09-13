@@ -1,4 +1,5 @@
 const { search, validate_adress } = require('./openai')
+const { validatePlaceAndAddress } = require('./google_maps')
 const dotenv = require('dotenv');
 const axios = require('axios')
 
@@ -34,34 +35,44 @@ const validate_address = async (spot) => {
 
 }
 
-const getMapsElements = async (req, res) => {
+
+const getMapsElements = async (req) => {
     const query = req.body.spot_query
     console.log({query})
 
-    try {
-        const chatGptResp = await search(query)
-        const doesExistMany =  await Promise.all(chatGptResp.map(x => validate_address(x)))
+    const chatGptResp = await search(query)
+    const doesExistMany =  await Promise.all(chatGptResp.map(x => validatePlaceAndAddress(x.name, x.address)))
+    let validatedPlaces = []
+    doesExistMany.forEach((x, i) => {
+        if(x) validatedPlaces.push(chatGptResp[i])
+    })
+    const full_resp = await Promise.all(validatedPlaces.map(obj => getGeoLoc(obj)))
+    let final_resp = {spots: full_resp, locations: full_resp.map(({geoloc}) => geoloc)}
+    console.log({final_resp})
 
-        let validatedPlaces = []
-        doesExistMany.forEach((x, i) => {
-            if(x) validatedPlaces.push(chatGptResp[i])
-        })
-
-        const full_resp = await Promise.all(validatedPlaces.map(obj => getGeoLoc(obj)))
-
-        const final_resp = {spots: full_resp, locations: full_resp.map(({geoloc}) => geoloc)}
-
-        res.send(final_resp)
+    if(!final_resp.spots.length) {
+        final_resp = await getMapsElements(req)
     }
-    catch(e) {
-        console.log("error in search openai: ", e)
-        res.status(500);
-        res.send('Server error: ', e);
-    }
+    return final_resp
 
 
 }
 
+const searchQuery = async (req, res) => {
+    try {
+        let mapElements = await getMapsElements(req)
+        res.send(mapElements)
+    } catch(e) {
+        console.log("error in search openai: ", e)
+        res.status(500);
+        res.send('Server error: ', e);
+
+    }
+
+    
+}
+
 module.exports = {
-    getMapsElements
+    getMapsElements,
+    searchQuery
 }

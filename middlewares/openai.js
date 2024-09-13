@@ -1,5 +1,5 @@
 const OpenAI = require("openai");
-const { SYSTEM_PROMPT, USER_PROMPT,SECOND_USER_PROMPT } = require('./prompt.js')
+const { SYSTEM_PROMPT, USER_PROMPT, SECOND_USER_PROMPT } = require('./prompt.js')
 const dotenv = require('dotenv');
 
 // Configure dotenv to load environment variables from the .env file
@@ -54,25 +54,24 @@ const search = async (query) => {
     // const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
     console.log(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
 
-    messages.push({
-        "role": "assistant",
-        "content": resp.choices[0].message.content
-    })
-    messages.push({
-        "role": "user",
-        "content": SECOND_USER_PROMPT
-    })
+    // messages.push({
+    //     "role": "assistant",
+    //     "content": resp.choices[0].message.content
+    // })
+    // messages.push({
+    //     "role": "user",
+    //     "content": SECOND_USER_PROMPT
+    // })
 
-    const second_resp = await openai.chat.completions.create({
-        model:"gpt-4o",
-        temperature: 0,
-        messages})
+    // const second_resp = await openai.chat.completions.create({
+    //     model:"gpt-4o",
+    //     temperature: 0,
+    //     messages})
 
-    const second_parsedResponse = second_resp.choices[0].message.content.replace("```json", "").replace("```", "")
+    const second_parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
 
 
 
-    console.log(second_parsedResponse)
     const spots = JSON.parse(second_parsedResponse)
     return spots.spots
 
