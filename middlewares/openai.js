@@ -1,5 +1,5 @@
 const OpenAI = require("openai");
-const { SYSTEM_PROMPT, USER_PROMPT, SECOND_USER_PROMPT } = require('./prompt.js')
+const { SYSTEM_PROMPT, USER_PROMPT, PROMPT_SUGGESTION_PROMPT, SECOND_USER_PROMPT } = require('./prompt.js')
 const dotenv = require('dotenv');
 
 // Configure dotenv to load environment variables from the .env file
@@ -19,6 +19,22 @@ let messages = [
         "content": SYSTEM_PROMPT
     }
 ]
+
+const generatePromptSuggestions = async (address) => {
+    const final_prompt = PROMPT_SUGGESTION_PROMPT + address
+    const resp = await openai.chat.completions.create({
+        model:"gpt-4o",
+        temperature: 0,
+        messages: [{"role": "user", "content": final_prompt}]})
+    
+        console.log({resp})
+
+    const json = JSON.parse(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
+    return json
+    
+
+
+}
 
 const validate_adress = async (spot) => {
     const val_prompt = `Is there a place called ${spot.name} at this address ${spot.address}. Return exclusively a json with a boolean accessed by a key "doesExist" with true if Yes and False if no.`
@@ -42,8 +58,8 @@ const validate_adress = async (spot) => {
 
 
 
-const search = async (query) => {
-    const prompt = USER_PROMPT + query
+const search = async (query, user_address) => {
+    const prompt = USER_PROMPT + user_address + "\n\n\n" + query
     messages.push({"role": "user", "content": prompt})
 
     const resp = await openai.chat.completions.create({
@@ -80,5 +96,6 @@ const search = async (query) => {
 
 module.exports = {
     search,
-    validate_adress
+    validate_adress,
+    generatePromptSuggestions
 }

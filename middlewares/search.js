@@ -1,5 +1,5 @@
 const { search, validate_adress } = require('./openai')
-const { validatePlaceAndAddress } = require('./google_maps')
+const { validatePlaceAndAddress, getAddressFromGeoloc } = require('./google_maps')
 const dotenv = require('dotenv');
 const axios = require('axios')
 
@@ -38,9 +38,16 @@ const validate_address = async (spot) => {
 
 const getMapsElements = async (req) => {
     const query = req.body.spot_query
-    console.log({query})
+    if(!query) {
+        throw new Error("query cannot be null")
+    }
+    const user_location = req.body.user_location
 
-    const chatGptResp = await search(query)
+    const user_address = await getAddressFromGeoloc(user_location.lat, user_location.lng)
+    console.log({user_address})
+
+
+    const chatGptResp = await search(query, user_address)
     const doesExistMany =  await Promise.all(chatGptResp.map(x => validatePlaceAndAddress(x.name, x.address)))
     let validatedPlaces = []
     doesExistMany.forEach((x, i) => {

@@ -11,9 +11,7 @@ const USER_PROMPT =
 `
 Please make sure those spots are in the locations that is requested.
 
-Here is the user request:
-
-`
+Here is the request for a user located at this address: `
 
 const SECOND_USER_PROMPT = 
 `
@@ -22,9 +20,25 @@ Return this new response in the exact same json schema as the previous one with 
 `
 
 
+const PROMPT_SUGGESTION_PROMPT =
+`
+Give me 3 suggestions of prompt for searching for a restaurant, a bar, a café, etc. Those suggestions should not exceed 10 words and be lead by a matching emoji. 
+The response will be formatted as a json with a key suggestions accessing a list of prompt suggestions.
+Here are a few examples:
+- a cocktail bar for a first date with a romantic decor in West village.
+- Give me a restaurant in Brooklyn that has a similar vibe as Thursday Kitchen, the restaurant in East Village in New York.
+- an italian restaurant with a warm atmosphere for less than 50 dollars per person.
+- A café where I can work all day surrounded by creative people.
+
+Those prompts should match the location below and be in the tongue spoken in this city.
+
+location: `
+
+
 
 module.exports = {
     SYSTEM_PROMPT,
     USER_PROMPT,
-    SECOND_USER_PROMPT
+    SECOND_USER_PROMPT,
+    PROMPT_SUGGESTION_PROMPT
 }

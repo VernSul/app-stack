@@ -44,6 +44,7 @@ const validatePlaceAndAddress = async (placeName, address) => {
         // Check if the placeName is found within the nearby results
         const places = placesResponse.data.results;
         console.log(placeName, places)
+
         const matchingPlace = approximateSim(places, placeName)
         
         return matchingPlace
@@ -62,6 +63,19 @@ const validatePlaceAndAddress = async (placeName, address) => {
   }
 }
 
+const getAddressFromGeoloc = async (lat, lng) => {
+  try {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_MAPS_KEY}`
+  const resp = await axios.get(url)
+  console.log({resp})
+  return resp.data.results[0].formatted_address
+  } catch (e) {
+     console.log(e)
+    
+  }
+}
+
 module.exports = {
-    validatePlaceAndAddress
+    validatePlaceAndAddress,
+    getAddressFromGeoloc
 }
