@@ -11,6 +11,7 @@ const URL = "https://maps.googleapis.com/maps/api/geocode/json?address=314 W 52n
 const URL_BASE = "https://maps.googleapis.com/maps/api/geocode/json?address="
 
 const getGeoLoc = async (spot) => {
+    console.log({spot})
     let url;
     if(spot.address) { 
         url = URL_BASE + spot.address.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
@@ -51,7 +52,12 @@ const getMapsElements = async (req) => {
     const doesExistMany =  await Promise.all(chatGptResp.map(x => validatePlaceAndAddress(x.name, x.address)))
     let validatedPlaces = []
     doesExistMany.forEach((x, i) => {
-        if(x) validatedPlaces.push(chatGptResp[i])
+        if(x) {
+            console.log(x)
+            let obj = { ...chatGptResp[i] }
+            obj.g_object = x
+            validatedPlaces.push(obj)
+        }
     })
     const full_resp = await Promise.all(validatedPlaces.map(obj => getGeoLoc(obj)))
     let final_resp = {spots: full_resp, locations: full_resp.map(({geoloc}) => geoloc)}

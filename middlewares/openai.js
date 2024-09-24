@@ -66,9 +66,11 @@ const search = async (query, user_address) => {
         model:"gpt-4o",
         temperature: 0,
         messages})
+    
+    try {
 
     // const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
-    console.log(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
+    
 
     // messages.push({
     //     "role": "assistant",
@@ -89,7 +91,13 @@ const search = async (query, user_address) => {
 
 
     const spots = JSON.parse(second_parsedResponse)
+    console.log(spots)
     return spots.spots
+
+    } catch (e) {
+        return search(query, user_address)
+    }
+
 
 
 }

@@ -13,12 +13,16 @@ const approximateSim = (places, spot_name) => {
         keys: ['name']      // Key to search (if using objects, e.g., { name: 'Google' })
   };
   
-  const fuse = new Fuse(places.map(({name}) => ({ name })), options);
+  const fuse = new Fuse(places, options);
   
   // Perform fuzzy search
-  const result = fuse.search(spot_name);
-  console.log({result})
-  return !!result.length
+  const result = fuse.search(spot_name).sort((a, b) => a.score - b.score);
+  console.log(result)
+  if(result.length) {
+    return result[0].item
+  } else {
+    return false
+  }
 
 }
 
@@ -45,9 +49,8 @@ const validatePlaceAndAddress = async (placeName, address) => {
         const places = placesResponse.data.results;
         console.log(placeName, places)
 
-        const matchingPlace = approximateSim(places, placeName)
-        
-        return matchingPlace
+        return approximateSim(places, placeName)
+
       } else {
         console.log('Error with Places API:', placesResponse.data.status);
         return false;
