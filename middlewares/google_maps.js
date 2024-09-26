@@ -4,6 +4,8 @@ const Fuse = require('fuse.js');
 
 dotenv.config();
 
+const apiKey = process.env.GOOGLE_MAPS_KEY;
+
 
 
 const approximateSim = (places, spot_name) => {
@@ -28,7 +30,6 @@ const approximateSim = (places, spot_name) => {
 
 // Function to call the Geocoding API
 const validatePlaceAndAddress = async (placeName, address) => {
-  const apiKey = process.env.GOOGLE_MAPS_KEY;
   
   // Geocode the address to get its coordinates
   const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
@@ -78,7 +79,14 @@ const getAddressFromGeoloc = async (lat, lng) => {
   }
 }
 
+const getPlaceImagesUrl = (ref) => {
+  const url_base = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" 
+  const url = url_base + ref + "&key=" + apiKey
+  return url
+  }
+
 module.exports = {
     validatePlaceAndAddress,
-    getAddressFromGeoloc
+    getAddressFromGeoloc,
+    getPlaceImagesUrl
 }

@@ -1,5 +1,5 @@
 const { search, validate_adress } = require('./openai')
-const { validatePlaceAndAddress, getAddressFromGeoloc } = require('./google_maps')
+const { validatePlaceAndAddress, getAddressFromGeoloc, getPlaceImagesUrl } = require('./google_maps')
 const dotenv = require('dotenv');
 const axios = require('axios')
 
@@ -48,14 +48,23 @@ const getMapsElements = async (req) => {
     console.log({user_address})
 
 
-    const chatGptResp = await search(query, user_address)
-    const doesExistMany =  await Promise.all(chatGptResp.map(x => validatePlaceAndAddress(x.name, x.address)))
+    const { spots } = await search(query, user_address)
+    const doesExistMany =  await Promise.all(spots.map(x => validatePlaceAndAddress(x.name, x.address)))
     let validatedPlaces = []
     doesExistMany.forEach((x, i) => {
         if(x) {
             console.log(x)
-            let obj = { ...chatGptResp[i] }
-            obj.g_object = x
+            let obj = { ...spots[i] }
+            obj.g_object = {
+                place_id: x.place_id,
+                price_level: x.price_level,
+                rating: x.rating,
+                types: x.types,
+                opening_hours: x.opening_hours,
+                photos: x.photos.map(y => getPlaceImagesUrl(y.photo_reference)),
+                rating: x.rating
+
+            }
             validatedPlaces.push(obj)
         }
     })

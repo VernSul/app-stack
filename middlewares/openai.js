@@ -20,6 +20,16 @@ let messages = [
     }
 ]
 
+
+const turnRespToJson = (string) => {
+    try {
+        const json = JSON.parse(string.replace("```json", "").replace("```", ""))
+        return json
+    } catch(e) {
+        return false
+    }
+}
+
 const generatePromptSuggestions = async (address) => {
     const final_prompt = PROMPT_SUGGESTION_PROMPT + address
     const resp = await openai.chat.completions.create({
@@ -29,8 +39,8 @@ const generatePromptSuggestions = async (address) => {
     
         console.log({resp})
 
-    const json = JSON.parse(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
-    return json
+    
+    return turnRespToJson(resp.choices[0].message.content) || generatePromptSuggestions(address)
     
 
 
@@ -45,15 +55,8 @@ const validate_adress = async (spot) => {
         messages: [{"role": "user", "content": val_prompt}]})
 
     console.log(resp.choices[0].message.content)
-    try {
-    
-    const json = JSON.parse(resp.choices[0].message.content.replace("```json", "").replace("```", ""))
 
-    return json.doesExist
-    } catch(e) {
-        print(`unable to parse validation response for ${spot}: `, e)
-        return false
-    }
+    return turnRespToJson(resp.choices[0].message.content) || validate_adress(spot)
 }
 
 
@@ -66,8 +69,6 @@ const search = async (query, user_address) => {
         model:"gpt-4o",
         temperature: 0,
         messages})
-    
-    try {
 
     // const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
     
@@ -86,17 +87,9 @@ const search = async (query, user_address) => {
     //     temperature: 0,
     //     messages})
 
-    const second_parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
+    return turnRespToJson(resp.choices[0].message.content) || search(query, user_address)
 
 
-
-    const spots = JSON.parse(second_parsedResponse)
-    console.log(spots)
-    return spots.spots
-
-    } catch (e) {
-        return search(query, user_address)
-    }
 
 
 
