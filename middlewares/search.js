@@ -55,7 +55,7 @@ const getMapsElements = async (req) => {
         if(x) {
             console.log(x)
             let obj = { ...spots[i] }
-            obj.g_object = {
+            obj.gObject = {
                 place_id: x.place_id,
                 price_level: x.price_level,
                 rating: x.rating,
