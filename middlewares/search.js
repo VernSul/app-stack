@@ -1,5 +1,6 @@
 const { search, validate_adress } = require('./openai')
 const { validatePlaceAndAddress, getAddressFromGeoloc, getPlaceImagesUrl } = require('./google_maps')
+const { save_query, save_places } = require('./db_logger');
 const dotenv = require('dotenv');
 const axios = require('axios')
 
@@ -11,7 +12,6 @@ const URL = "https://maps.googleapis.com/maps/api/geocode/json?address=314 W 52n
 const URL_BASE = "https://maps.googleapis.com/maps/api/geocode/json?address="
 
 const getGeoLoc = async (spot) => {
-    console.log({spot})
     let url;
     if(spot.address) { 
         url = URL_BASE + spot.address.replace(" ", "+") + "&key=" + process.env.GOOGLE_MAPS_KEY
@@ -45,7 +45,6 @@ const getMapsElements = async (req) => {
     const user_location = req.body.user_location
 
     const user_address = await getAddressFromGeoloc(user_location.lat, user_location.lng)
-    console.log({user_address})
 
 
     const { spots } = await search(query, user_address)
@@ -53,7 +52,6 @@ const getMapsElements = async (req) => {
     let validatedPlaces = []
     doesExistMany.forEach((x, i) => {
         if(x) {
-            console.log(x)
             let obj = { ...spots[i] }
             obj.gObject = {
                 place_id: x.place_id,
@@ -62,7 +60,9 @@ const getMapsElements = async (req) => {
                 types: x.types,
                 opening_hours: x.opening_hours,
                 photos: x.photos.map(y => getPlaceImagesUrl(y.photo_reference)),
-                rating: x.rating
+                rating: x.rating,
+                business_status: x.business_status,
+                user_ratings_total: x.user_ratings_total
 
             }
             validatedPlaces.push(obj)
@@ -70,11 +70,11 @@ const getMapsElements = async (req) => {
     })
     const full_resp = await Promise.all(validatedPlaces.map(obj => getGeoLoc(obj)))
     let final_resp = {spots: full_resp, locations: full_resp.map(({geoloc}) => geoloc)}
-    console.log({final_resp})
 
     if(!final_resp.spots.length) {
         final_resp = await getMapsElements(req)
     }
+    log_query(req, final_resp)
     return final_resp
 
 
@@ -90,8 +90,16 @@ const searchQuery = async (req, res) => {
         res.send('Server error: ', e);
 
     }
-
     
+}
+
+const log_query = async (req, places) => {
+    const { spot_query, user_location, user_uuid, platform } = req.body
+    const place_ids = await save_places(places)
+    console.log({place_ids})
+    await save_query(spot_query, user_location, user_uuid, place_ids, platform)
+
+
 }
 
 module.exports = {

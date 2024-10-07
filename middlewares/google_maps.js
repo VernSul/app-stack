@@ -48,7 +48,6 @@ const validatePlaceAndAddress = async (placeName, address) => {
       if (placesResponse.data.status === 'OK') {
         // Check if the placeName is found within the nearby results
         const places = placesResponse.data.results;
-        console.log(placeName, places)
 
         return approximateSim(places, placeName)
 
