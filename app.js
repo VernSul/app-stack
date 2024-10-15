@@ -6,6 +6,8 @@ const cors = require('cors');
 
 const { searchQuery } = require('./middlewares/search')
 const { getPromptSuggestions } = require('./middlewares/promptSuggestion')
+const { get_items } = require('./middlewares/support')
+
 
 // Configure dotenv to load environment variables from the .env file
 dotenv.config();
@@ -30,6 +32,9 @@ app.post('/search', searchQuery)
 
 // new spot search
 app.get('/prompt', getPromptSuggestions)
+
+// get support items
+app.get('/support', get_items)
 
 // Start the server on a specified port
 const PORT = process.env.PORT || 3000;

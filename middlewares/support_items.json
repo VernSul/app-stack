@@ -1,0 +1,50 @@
+[
+    {
+      "question": "What is Plaz and how does it work?",
+      "answer": "Plaz is an AI-powered map search app designed to help you find new bars, restaurants, and other local places of interest. By leveraging AI search capabilities and geolocation, you can easily discover spots around you."
+    },
+    {
+      "question": "How do I create an account on Plaz?",
+      "answer": "To create an account on Plaz, download the app, click on the 'Create Account' button, and provide your email address. Once verified, you’ll be able to access all features and start exploring local spots."
+    },
+    {
+      "question": "How do I search for restaurants or bars near me?",
+      "answer": "Simply open the app and tap on the search bar at the top of the home screen. You can enter prompts such as 'a warm and classy italian restaurant in Soho for less than $100 per person' and the app will show relevant locations around you."
+    },
+    {
+      "question": "Can I save my favorite locations?",
+      "answer": "No you cannot."
+    },
+    {
+      "question": "How can I reset my password?",
+      "answer": "If you forgot your password, click on the 'I don't remember my password' link on the login page. Enter your email address, and we’ll send you instructions to reset it. Follow the steps in the email to create a new password."
+    },
+    {
+      "question": "The app isn’t showing any results in my area. What should I do?",
+      "answer": "First, ensure that your location services are enabled on your device and that Plaz has permission to access your location. If you're still experiencing issues, try refreshing the app or restarting your device."
+    },
+    {
+      "question": "Why is the map not loading?",
+      "answer": "If the map isn’t loading, it could be due to a weak internet connection. Ensure you have a stable Wi-Fi or mobile data connection. If the problem persists, clear the app’s cache or try reinstalling the app."
+    },
+    {
+      "question": "Can I leave reviews for places I visit?",
+      "answer": "No you cannot."
+    },
+    {
+      "question": "How does Plaz recommend locations?",
+      "answer": "Plaz uses AI algorithms to recommend locations based on your prompt. You can also receive recommendations based on trending spots in your area."
+    },
+    {
+      "question": "How do I improve my recommendations?",
+      "answer": "To receive better recommendations, make sure to to provide consistent and relevant information through your prompt."
+    },
+    {
+      "question": "The app is crashing or freezing. How can I fix this?",
+      "answer": "If the app is crashing, try the following steps:\n1. Close the app and reopen it.\n2. Ensure your app is up to date by checking for updates in your app store.\n3. Clear the app’s cache in your device settings.\n4. Restart your phone.\nIf the issue persists, contact our support team by sending a email to vicfaucon@gmail.com."
+    },
+    {
+      "question": "I didn’t receive my email verification. What should I do?",
+      "answer": "If you didn’t receive the verification email, check your spam or junk folder. If you still face issues, contact our support team at vicfaucon@gmail.com."
+    }
+  ]
