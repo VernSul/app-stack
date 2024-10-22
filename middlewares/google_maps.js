@@ -19,7 +19,6 @@ const approximateSim = (places, spot_name) => {
   
   // Perform fuzzy search
   const result = fuse.search(spot_name).sort((a, b) => a.score - b.score);
-  console.log(result)
   if(result.length) {
     return result[0].item
   } else {
@@ -35,10 +34,13 @@ const validatePlaceAndAddress = async (placeName, address) => {
   const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
   
   try {
+    console.log({geocodeUrl})
     const geocodeResponse = await axios.get(geocodeUrl);
     
     if (geocodeResponse.data.status === 'OK') {
       const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
+
+
       
       // Now we use the coordinates to find places nearby with the Places API
       const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=500&keyword=${encodeURIComponent(placeName)}&key=${apiKey}`;
@@ -68,9 +70,12 @@ const validatePlaceAndAddress = async (placeName, address) => {
 
 const getAddressFromGeoloc = async (lat, lng) => {
   try {
+    if(!lat && !lng) {
+      return ""
+    }
   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_MAPS_KEY}`
+  console.log("url in getAddressFromGeoloc: ", {url})
   const resp = await axios.get(url)
-  console.log({resp})
   return resp.data.results[0].formatted_address
   } catch (e) {
      console.log(e)

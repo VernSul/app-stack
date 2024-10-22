@@ -30,7 +30,6 @@ const pg_query = async (query, values) => {
     try {
         // Use the client to perform database operations
         const res = await client.query(query, values)
-        console.log(res.rows)
   
         return res.rows
     } catch(e) {

@@ -39,8 +39,10 @@ const validate_address = async (spot) => {
 
 const getMapsElements = async (req) => {
     const query = req.body.spot_query
+    console.log(req.body)
     if(!query) {
-        throw new Error("query cannot be null")
+        console.log("The query is null")
+        return []
     }
     const user_location = req.body.user_location
 
@@ -96,7 +98,6 @@ const searchQuery = async (req, res) => {
 const log_query = async (req, places) => {
     const { spot_query, user_location, user_uuid, platform } = req.body
     const place_ids = await save_places(places)
-    console.log({place_ids})
     await save_query(spot_query, user_location, user_uuid, place_ids, platform)
 
 

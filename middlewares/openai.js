@@ -37,8 +37,6 @@ const generatePromptSuggestions = async (address) => {
         temperature: 0,
         messages: [{"role": "user", "content": final_prompt}]})
     
-        console.log({resp})
-
     
     return turnRespToJson(resp.choices[0].message.content) || generatePromptSuggestions(address)
     
@@ -54,7 +52,6 @@ const validate_adress = async (spot) => {
         temperature: 0,
         messages: [{"role": "user", "content": val_prompt}]})
 
-    console.log(resp.choices[0].message.content)
 
     return turnRespToJson(resp.choices[0].message.content) || validate_adress(spot)
 }
@@ -66,9 +63,11 @@ const search = async (query, user_address) => {
     messages.push({"role": "user", "content": prompt})
 
     const resp = await openai.chat.completions.create({
-        model:"gpt-4o",
+        model:"gpt-4o-mini",
         temperature: 0,
         messages})
+    
+    console.log({resp})
 
     // const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
     

@@ -11,10 +11,8 @@ const getPromptSuggestions = async (req, res) => {
         //     res.status(400)
         //     res.send('params not formatted properly')
         // }
-        console.log({lat, lng})
         const address = await getAddressFromGeoloc(lat, lng)
         const suggestions = await generatePromptSuggestions(address)
-        console.log(suggestions)
         return res.send(suggestions)
     } catch(e) {
         console.log({e})

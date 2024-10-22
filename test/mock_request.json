@@ -1,0 +1,26 @@
+[ 
+    {
+        "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
+        "user_location": {"lat":48.8729516,"lng":2.3543728},
+        "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
+        "platform": "web"
+    },
+    {
+      "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
+      "user_location": {"lat":0,"lng":0},
+      "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
+      "platform": "ios"
+    },
+    {
+        "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
+        "user_location": {"lat":48.8729516,"lng":2.3543728},
+        "user_uuid": "",
+        "platform": "android"
+    },
+    {
+        "spot_query": "",
+        "user_location": {"lat":48.8729516,"lng":2.3543728},
+        "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
+        "platform": "web"
+    }
+]
