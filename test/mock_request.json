@@ -3,24 +3,28 @@
         "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
         "user_location": {"lat":48.8729516,"lng":2.3543728},
         "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
-        "platform": "web"
+        "platform": "web",
+        "test": true
     },
     {
       "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
-      "user_location": {"lat":0,"lng":0},
+      "user_location": {"lat":0.0,"lng":0.0},
       "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
-      "platform": "ios"
+      "platform": "ios",
+      "test": true
     },
     {
-        "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris",
+        "spot_query": "🍽️ Un restaurant cosy pour un dîner romantique à Paris pour moins de 30 euros par personne, à 5 minutes à pied de la cour des petites écuries. Ce lieux doit avoir des options végétariennes et des boissons sans alcool.",
         "user_location": {"lat":48.8729516,"lng":2.3543728},
         "user_uuid": "",
-        "platform": "android"
+        "platform": "android",
+        "test": true
     },
     {
         "spot_query": "",
         "user_location": {"lat":48.8729516,"lng":2.3543728},
         "user_uuid": "LTXzO0CptLWvJGoDdcJoh0XrzQ12",
-        "platform": "web"
+        "platform": "web",
+        "test": true
     }
 ]

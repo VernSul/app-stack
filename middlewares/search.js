@@ -42,14 +42,18 @@ const getMapsElements = async (req) => {
     console.log(req.body)
     if(!query) {
         console.log("The query is null")
-        return []
+        return {spots: [], locations: []}
     }
     const user_location = req.body.user_location
 
     const user_address = await getAddressFromGeoloc(user_location.lat, user_location.lng)
 
 
-    const { spots } = await search(query, user_address)
+    const search_resp = await search(query, user_address)
+    if(!search_resp) {
+        return {spots: [], locations: []}
+    }
+    const spots = search_resp.spots
     const doesExistMany =  await Promise.all(spots.map(x => validatePlaceAndAddress(x.name, x.address)))
     let validatedPlaces = []
     doesExistMany.forEach((x, i) => {
@@ -76,7 +80,9 @@ const getMapsElements = async (req) => {
     if(!final_resp.spots.length) {
         final_resp = await getMapsElements(req)
     }
-    log_query(req, final_resp)
+    if (!req.body.test) {
+        log_query(req, final_resp)
+    }
     return final_resp
 
 

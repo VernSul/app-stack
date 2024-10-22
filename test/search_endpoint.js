@@ -1,7 +1,9 @@
 const mock_data = require('./mock_request.json')
 const axios = require('axios')
 
-const URL = "http://localhost:3000"
+const URL = "https://app-stack.onrender.com"
+// "http://localhost:3000"
+ 
 
 
 const test_search = async () => {
@@ -24,15 +26,18 @@ const test_search = async () => {
 }
 
 const test = async () => {
+    const start = Date.now();
     const search_responses = await test_search()
     search_responses.forEach(x => {
         if(!x.data.spots) {
-            console.log("No response for query: ", x.config.data)
+            console.log('\x1b[33m No response for query: \x1b[0m');
+            console.log(x.config.data)
         }
         else if(!x.data.spots.length) {
             console.log("No locations for query: ", x.config.data)
         }
     })
+    console.log((Date.now() - start) / 1000, 's')
 }
 
 test()

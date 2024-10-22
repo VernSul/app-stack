@@ -62,12 +62,14 @@ const search = async (query, user_address) => {
     const prompt = USER_PROMPT + user_address + "\n\n\n" + query
     messages.push({"role": "user", "content": prompt})
 
-    const resp = await openai.chat.completions.create({
-        model:"gpt-4o-mini",
-        temperature: 0,
-        messages})
-    
-    console.log({resp})
+    try {
+
+        const resp = await openai.chat.completions.create({
+            model:"gpt-4o-mini",
+            temperature: 0,
+            messages})
+        
+        console.log({resp})
 
     // const parsedResponse = resp.choices[0].message.content.replace("```json", "").replace("```", "")
     
@@ -85,8 +87,15 @@ const search = async (query, user_address) => {
     //     model:"gpt-4o",
     //     temperature: 0,
     //     messages})
+        const openai_content = resp.choices[0].message.content
 
-    return turnRespToJson(resp.choices[0].message.content) || search(query, user_address)
+        return turnRespToJson(openai_content) 
+        } catch(e) {
+            console.log("error in openai api: ", {e})
+            return false
+
+        }
+    // || search(query, user_address)
 
 
 
