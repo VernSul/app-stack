@@ -65,7 +65,7 @@ const getMapsElements = async (req) => {
                 rating: x.rating,
                 types: x.types,
                 opening_hours: x.opening_hours,
-                photos: x.photos.map(y => getPlaceImagesUrl(y.photo_reference)),
+                photos: x.photos ? x.photos.map(y => getPlaceImagesUrl(y.photo_reference)) : [],
                 rating: x.rating,
                 business_status: x.business_status,
                 user_ratings_total: x.user_ratings_total
