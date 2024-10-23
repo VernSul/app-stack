@@ -65,7 +65,7 @@ const search = async (query, user_address) => {
     try {
 
         const resp = await openai.chat.completions.create({
-            model:"gpt-4o-mini",
+            model:"gpt-4o",
             temperature: 0,
             messages})
         

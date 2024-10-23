@@ -2,6 +2,7 @@ const mock_data = require('./mock_request.json')
 const axios = require('axios')
 
 const URL = "https://app-stack.onrender.com"
+const CONCURRENT_REQUESTS = 60
 // "http://localhost:3000"
  
 
@@ -14,7 +15,7 @@ const test_search = async () => {
         const req = mock_data[i]
         promise_resp.push(axios.post(`${URL}/search`, req))
         if(i === 0){
-            let j = 30
+            let j = CONCURRENT_REQUESTS
             while(j > 0) {
                 promise_resp.push(axios.post(`${URL}/search`, req))
                 j--
