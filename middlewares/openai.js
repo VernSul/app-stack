@@ -33,7 +33,7 @@ const turnRespToJson = (string) => {
 const generatePromptSuggestions = async (address) => {
     const final_prompt = PROMPT_SUGGESTION_PROMPT + address
     const resp = await openai.chat.completions.create({
-        model:"gpt-4o",
+        model:"gpt-4o-mini",
         temperature: 0,
         messages: [{"role": "user", "content": final_prompt}]})
     
