@@ -36,9 +36,20 @@ location: `
 
 
 
+const PROMPT_PRINT_PROMPT_GENERATION = (amount=5) => 
+`
+give me ${amount} prompt(s) similar to this one used to generate an image, not reusing the saying "Not all who wander are lost". You could base it on a saying or no saying at all. Those prompts are meant to generate images that are beautiful, delicate, artful and inspiring. They relate to self-improvement or self-gratification:
+"create a picture with no words that is a representation of "Not all who wander are lost" in the style of toile de jouy." It can ask to for an image in another art deco styles likes those ones: Art Nouveau, Chinoiserie, Japandi, Rococo, Aubusson Tapestry, Ottoman Iznik, Bauhaus, Gothic Revival, Arts and Crafts, Baroque, Renaissance Ornamentation, Victorian Botanical Illustration, Persian Miniature, Trellis Wallpaper, Egyptian Revival, Trompe-l'œil, Moorish Tilework, Indigo Shibori, Scandinavian Folk Art, Neoclassical Ornamentation, etc
+Make this image publishable on instagram and with 600 dpi.
+Return those prompts in a json list accessed through a key called "prompts".
+`
+
+
+
 module.exports = {
     SYSTEM_PROMPT,
     USER_PROMPT,
     SECOND_USER_PROMPT,
-    PROMPT_SUGGESTION_PROMPT
+    PROMPT_SUGGESTION_PROMPT,
+    PROMPT_PRINT_PROMPT_GENERATION
 }
