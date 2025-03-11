@@ -7,6 +7,7 @@ const cors = require('cors');
 const { searchQuery } = require('./middlewares/search')
 const { getPromptSuggestions } = require('./middlewares/promptSuggestion')
 const { get_items } = require('./middlewares/support')
+const { generatePrintImages, paceImageGeneration, parsePrompt, publish_on_etsy } = require('./middlewares/image_generation')
 
 
 // Configure dotenv to load environment variables from the .env file
@@ -35,6 +36,14 @@ app.get('/prompt', getPromptSuggestions)
 
 // get support items
 app.get('/support', get_items)
+
+app.get('/generate_image', generatePrintImages, paceImageGeneration)
+
+app.get('/generate_image_from_prompt', parsePrompt, paceImageGeneration)
+
+app.post('/ig_publish', parsePrompt, paceImageGeneration)
+
+app.post('/etsy_publish', publish_on_etsy)
 
 // Start the server on a specified port
 const PORT = process.env.PORT || 3000;

@@ -52,7 +52,18 @@ const save_query = async (spot_query, user_location, user_uuid, place_ids, platf
     pg_query(sql, [spot_query, user_uuid, place_ids, user_location.lat, user_location.lng, platform])
 }
 
+const save_image = (prompt, url) => {
+    const sql = `
+    INSERT INTO generated_images (prompt, url)
+    VALUES ($1, $2);
+    `
+    pg_query(sql, [prompt, url])   
+
+}
+
+
 module.exports = {
     save_query,
-    save_places
+    save_places,
+    save_image
 }
