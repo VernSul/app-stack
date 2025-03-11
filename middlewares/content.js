@@ -43,3 +43,7 @@ Due to the nature of this purchase( instant download) returns are not accepted.
 Printable Wall Art, digital art, wall art, print, digital prints, art prints, digital download, art print, poster, gallery wall set, printable art, digital wall art, digital art
 Prints wall art
 `
+
+module.exports = {
+    PRINT_DIGITAL_DESCRIPTION
+}

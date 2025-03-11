@@ -37,6 +37,7 @@ const turnRespToJson = (string) => {
     }
 }
 
+
 const generatePromptSuggestions = async (address) => {
     const final_prompt = PROMPT_SUGGESTION_PROMPT + address
     const resp = await openai.chat.completions.create({
@@ -68,30 +69,44 @@ const prompt = async (messages, params) => {
     const resp = await openai.chat.completions.create({
         ...params,
         messages})
+        
+    console.log(resp.choices[0].message.content)
     
-    return turnRespToJson(resp.choices[0].message.content)
-
+    return turnRespToJson(resp.choices[0].message.content);
 }
 
 const getEtsyMetadata = async (path) => {
-    const content = 
-    `give a list of around 5 keywords that defines this image as it was sold as a print on etsy. 
+    const text = `give a list of around 5 keywords that defines this image as if it was sold as a print on etsy. 
     Those keywords should emulate the customers interested in buying this print would type. 
     Add in your response a brief descriptiom aiming at making the reader want to buy this print.
     Return the response as a json with two keys, description accessing a text, title accessing the list of keywords.`
 
+    const content = [{
+        "type": "text",
+        "text": text
+    },
+    {
+        "type": "image_url",
+        "image_url": {
+            "url": path,
+            "detail": "high"
+        }
+    }
+]
 
-    const messages = [{"role": "user", "content": content}]
+    const messages = [
+        {"role": "user", "content": content},
+
+    ]
     const params = {
         model:OPENAI_MODEL,
         temperature: 1.3,
-
     }
 
 
-    const keywords = await prompt(messages)
+    const resp = await prompt(messages, params)
 
-    return keywords["words"]
+    return resp
 
 }
 
@@ -167,6 +182,53 @@ const generateImage = async (prompt, resolution="1024x1024") => {
 
 }
 
+const getEventsFromEmail = async (emailBody) => {
+
+    const params =  { 
+        model:'gpt-4o-mini',
+        temperature: 0
+    }
+
+    const promptExtraitSection = `
+        Extrais du contenu suivant tout le texte de la section intitulée LES EVENEMENTS DU MOMENT.
+        Retourne une réponse en format json avec le texte en format string accédé par une clé texte.
+
+        CONTENU:
+
+    ` + emailBody
+
+    const messages_1 = [{"role": "user", "content": promptExtraitSection}]
+
+
+    let resp = await prompt(messages_1, params);
+    while (resp['texte'].length < 2000) {
+        resp = await prompt(messages_1, params);
+    }
+
+    console.log({resp})
+
+    const promptContent = `
+        Extrais du texte suivant les événements inclus dans la section LES EVENEMENTS DU MOMENT, auxquels je pourrai être intéressé de me rendre. Ne prends pas en compte les événements présents dans les autres sections du texte. 
+        Je suis un jeune réalisateur intéressé de rencontrer des professionnels du cinéma puor créer des liens professionels ou amical.
+        Je suis donc intéressé de me rendre à des événements réunissant des professionnels du cinémas, des réalisateurs, des scénaristes, des acteurs. 
+        Retourne une réponse en format json avec une liste d'événements accédée par une clé events. Chaque event est représenté par un objet comprenant les propriété suivante: summary (string), location (address), description (string), startDateTime (datetime with timezone), endDateTime (datetime with timezone), timeZone (string).
+        La propriété description doit être seulement le contenu de l'annonce.
+        Your response should contain the json only.
+
+        CONTENU:
+
+    ` + (Array.isArray(resp['texte']) ? resp['texte'].join('\n\n') : resp['texte'])
+
+    const messages = [{"role": "user", "content": promptContent}]
+
+
+    const événements = await prompt(messages, params);
+    console.log({événements})
+    return événements
+}
+
+
+
 module.exports = {
     search,
     prompt,
@@ -174,5 +236,6 @@ module.exports = {
     generatePromptSuggestions,
     getPrintImagePrompt,
     generateImage,
-    getEtsyMetadata
+    getEtsyMetadata,
+    getEventsFromEmail
 }

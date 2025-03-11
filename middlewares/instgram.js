@@ -1,8 +1,6 @@
 
 
-
-
-const access_token = "EAAFRzx6IvnABO0ZBO5IA5kGCOageWgrRbG0IfZB6taOyRuNiZB1fEzHpKt6ZBPcSUb7CLUyASrYImmGzC6CnSrZBTZCZAQlEbZAQb4zez4xi0t5PD5GBvbU4wMdP0eV84rNNwNLUVLQsGXDoYefX0t8y0q15PPf10c05wU3eUcIqIM2kEZCMmLiJJzXmVgNtJ8sZC5dGMSeL6FRrFg8ZCgZD"
+const access_token = "EAAFRzx6IvnABO3G0mnRdG0yrK2NHzfYMzWcz0FziXXgzsi65kc2hp9GYJeyRY7sZBMSDN2QI7zLdTnoPBTcEF8P0QL8THUm1FP0Ftr2ctXdiIGQej1GWQW6WmhHluK9b4vU6ENZBOV7g2ZBP8bd8T7ZCD4AigQvg7WoW03aKhAuObUcNTinSj8ZCfitzKybJ81ZA61FPConfVIkysZD"
 
 
 const post_meta_api = async (endpoint, body) => {
@@ -25,6 +23,6 @@ const publish = async (media_url, caption) => {
          "access_token": access_token
     }
     resp = await post_meta_api("media_publish", publish_body)
-    
+
     return resp["id"]
 }

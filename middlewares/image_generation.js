@@ -1,6 +1,6 @@
 const { getPrintImagePrompt, generateImage, getEtsyMetadata } = require('./openai')
 const { save_image } = require('./db_logger');
-const { createDraft } = require('./etsy');
+const { createDraft, uploadImage } = require('./etsy');
 const { uploadImageFromUrl } = require('./google')
 const { PRINT_DIGITAL_DESCRIPTION } = require('./content')
 
@@ -14,6 +14,17 @@ const generatePrintImages = async (req, _, next) => {
     req.prompts = prompts.slice(0, prompt_amount); // Attach prompts to req object
     next() 
 }
+
+const getImageBinary = async (url) => {
+    try {
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+      const imageBuffer = Buffer.from(response.data, 'binary');
+      console.log("Image binary data retrieved successfully");
+      return imageBuffer;
+    } catch (error) {
+      console.error("Error fetching image:", error.message);
+    }
+  }
 
 const parsePrompt = (req, res, next) => {
     req.prompts = [req.body.prompt]
@@ -53,30 +64,42 @@ const paceImageGeneration = (req, res) => {
 
 }
 
-
-const publish_on_etsy = (req, res) => {
-
-    const { path } = req.body
-
-    const etsyGenData = getEtsyMetadata(path) 
+const get_etsy_listing_metadata = async (path) => {
+    const etsyGenData = await getEtsyMetadata(path) 
+    console.log({etsyGenData})
 
     const product_data = {
         "quantity": 999,
-        "title": etsyGenData["title"],
+        "title": etsyGenData["title"][0],
         "description": etsyGenData["description"] + "\n\n" +  PRINT_DIGITAL_DESCRIPTION,
         "price": 1.5,
         "who_made": "i_did",
         "when_made": "2020_2024",
-        "taxonomy_id": ""
-
+        "taxonomy_id": 119,
+        "type": "download"
     }
 
-    createDraft
+    return product_data
+
+}
+
+
+const publish_on_etsy = async (req, res) => {
+
+    const { path } = req.body
+    const product_data = await get_etsy_listing_metadata(path)
+    const etsy_resp = await createDraft(product_data)
+    const image_binary = await getImageBinary(path)
+    const etsy_image_resp = await uploadImage(etsy_resp["listing_id"], image_binary)
+    const final_resp = {...etsy_resp, ...etsy_image_resp}
+
+    res.json(final_resp)
 
 }
 
 module.exports = {
     generatePrintImages,
     paceImageGeneration,
-    parsePrompt
+    parsePrompt,
+    publish_on_etsy
 }
